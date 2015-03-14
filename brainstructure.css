@@ -1,41 +1,22 @@
-#container { 
-position: relative;
-margin: 10;
-}
-
-#svg {
-position: absolute;
-left: 0;
-top: 0;
-}
-
-#img {
-left: 0;
-top: 0;
-}
 
 path {
-stroke-width: 2;
-stroke: black;
+  stroke-width: 2;
+  stroke: black;
 }
 
 .hover {
-stroke-width: 20;
+  stroke-width: 20;
 }
 
 #brain {
-  position: absolute;
+  position: relative;
   width: 500;
   height: 500;
+  border: 2px solid #D5D5D5;
 }
-
-
-#chart {
-height: 500px;
-}
-
-#documentation {
-top: 500px;
+#icicle {
+  position: relative
+  border: 2px solid #D5D5D5;
 }
 
 .node {

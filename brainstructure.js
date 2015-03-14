@@ -8,7 +8,7 @@ var _structures = {};
 
 var width = 800,
     height = 600,
-    vPadding = 0;
+    vPadding = 200;
 
 var x = d3.scale.linear()
     .domain([0, width])
@@ -102,8 +102,9 @@ d3.json(STRUCTURES_URL, function(response) {
           })
           .on("click", clicked)
           .on("mouseover", function (d) {
+            console.log(d3.select('#' + d.path).attr("id"));
             d3.select("#" + d.path)
-            .attr("style", function (d) { return "stroke:black;fill:black"; });
+            .attr("style", function (d) { console.log('setting color to black.'); return "stroke:black;fill:black"; });
           });
 
       svg.selectAll(".label")
