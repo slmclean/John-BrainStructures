@@ -1,0 +1,55 @@
+#container { 
+position: relative;
+margin: 10;
+}
+
+#svg {
+position: absolute;
+left: 0;
+top: 0;
+}
+
+#img {
+left: 0;
+top: 0;
+}
+
+path {
+stroke-width: 2;
+stroke: black;
+}
+
+.hover {
+stroke-width: 20;
+}
+
+#brain {
+  position: absolute;
+  width: 500;
+  height: 500;
+}
+
+
+#chart {
+height: 500px;
+}
+
+#documentation {
+top: 500px;
+}
+
+.node {
+  fill: #ddd;
+  stroke: #fff;
+}
+
+.label {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.link {
+  stroke: red;
+  stroke-opacity: .5;
+  fill: none;
+}
