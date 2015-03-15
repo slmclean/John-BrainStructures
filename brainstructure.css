@@ -9,7 +9,7 @@ path {
 }
 
 #brain {
-  position: relative;
+  position: absolute;
   width: 500;
   height: 500;
   border: 2px solid #D5D5D5;

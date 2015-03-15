@@ -1,4 +1,3 @@
-var SVG_PATH = "human_brain.svg";
 var STRUCTURES_URL = "structures.json";
 var DOWNSAMPLE = 4;
 
@@ -7,7 +6,7 @@ var SECTION_IMAGE_ID = 112364351;
 var _structures = {};
 
 var width = 800,
-    height = 600,
+    height = 2000,
     vPadding = 200;
 
 var x = d3.scale.linear()
@@ -41,7 +40,15 @@ var paths = {};
 
 var addWeightAndPaths = function(root, structures, paths) {
   root.weight = structures[root.id].weight;
-  root.path = paths[root.id];
+  if (paths[root.id] != null) {
+    console.log('found non-null!' + paths[root.id][0] + "\n" + paths[root.id][1] );
+    root.path = paths[root.id][0];
+    root.path_parent = paths[root.id][1];
+  }
+  else {
+    root.path = null;
+    root.path_parent = null;
+  }
   var children = root.children;
   if (children.length == 0) {
     root.size = root.weight;
@@ -53,28 +60,60 @@ var addWeightAndPaths = function(root, structures, paths) {
   }
 }
 
-
-
-d3.json(STRUCTURES_URL, function(response) {
-  for (var i = 0; i < response.msg.length; i++) {
-    var s = response.msg[i];
-    _structures[s.id] = s;
+// Helper function for dealing with the weirdness of xml. Find the first
+// child of elem "n" that is of type "element".
+// Adapted from: http://www.w3schools.com/dom/prop_element_firstchild.asp
+var get_firstchild = function (n) {
+  localfirstchild = n.firstChild;
+  while (localfirstchild.nodeType != 1) {
+    localfirstchild = localfirstchild.nextSibling;
   }
+  return localfirstchild;
+}
 
-  d3.xml("human_brain.svg", "images/svg+xml", function(xml) {
-    document.getElementById("brain").appendChild(xml.documentElement);
 
+// Load all of the lsices.
+var loadSlices = function(on_success) {
+  d3.json("slices.json", function (filenames) {
+    d3.select("#brain").append("svg").attr("id", "brain_svg").attr("width", "600")
+        .attr("height", 900)
+        .append("g").attr("transform","scale(0.010625)")
+        .attr("id", "svg_container");
+    var i, j;
+    for (i = 0; i < filenames.length; i++) {
+      d3.xml("svgslices/" + filenames[i], "images/svg+xml", function (xml) {
+        var brain_svg = document.getElementById("svg_container");
+        xml_elem = get_firstchild(get_firstchild(xml.documentElement));
+        brain_svg.appendChild(xml_elem);
+        xml_elem.setAttribute("visibility", "hidden");
+        xml_elem.setAttribute("class", "slice_svg");
+      });
+    }
+  });
+  if ($("#278094964") != null) {
+    on_success();
+  }
+}
+
+var main = function() {    
+    d3.json(STRUCTURES_URL, function(response) {
+    for (var i = 0; i < response.msg.length; i++) {
+      var s = response.msg[i];
+      _structures[s.id] = s;
+    }
+    
     d3.selectAll("path")
       .attr("title", function (d) {
          return _structures[d3.select(this).attr("structure_id")].name;
       });
-
  
+    d3.selectAll(".slice_svg").attr("id", function() { return "p" + d3.select(this).attr("id"); });
     d3.selectAll("path").attr("id", function () { return 'p' + d3.select(this).attr("id"); })[0]
       .forEach(function (d) {
         var structure_id = d.attributes.structure_id.value,
-          path_id = d.id;
-        paths[structure_id] = path_id;
+          path_id = d.id,
+          parent_id = "p" + d.attributes.parent_id.value;
+        paths[structure_id] = [path_id, parent_id];
       });
 
     d3.json("allen.json", function(error, root) {
@@ -82,6 +121,7 @@ d3.json(STRUCTURES_URL, function(response) {
       addWeightAndPaths(root, _structures, paths);
       var nodes = partition.nodes(root);
 
+      var svg_color;
       rect = rect
           .data(nodes)
         .enter().append("rect")
@@ -102,9 +142,14 @@ d3.json(STRUCTURES_URL, function(response) {
           })
           .on("click", clicked)
           .on("mouseover", function (d) {
-            console.log(d3.select('#' + d.path).attr("id"));
+            d3.selectAll(".slice_svg").attr("visibility", "hidden");
+            console.log("#" + d.path_parent);
             d3.select("#" + d.path)
-            .attr("style", function (d) { console.log('setting color to black.'); return "stroke:black;fill:black"; });
+              .attr("style", function (d) { svg_color = d3.select(this).attr("style"); console.log(svg_color); return "stroke:black;fill:red"; });
+            d3.select("#" + d.path_parent).attr("visibility", "visible");
+          }.on("mouseover", function (d) {
+            d3.select("#" + d.path)
+              .attr("style", function (d) { console.log(svg_color); return svg_color; })
           });
 
       svg.selectAll(".label")
@@ -122,7 +167,11 @@ d3.json(STRUCTURES_URL, function(response) {
 
     });
   });
-});
+}
+
+
+
+loadSlices(main);
 
 
 function clicked(d) {
