@@ -4,9 +4,17 @@
   <title>Icicle</title>
   <link rel="stylesheet" type="text/css" href="brainstructure.css">
   <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
 <body>
+     <div id="tooltip" class="hidden">
+        
+    <p><span id="value"></span></p>
+    </div>
+
+    <div id="tooltip2" class="hidden">
+        
+    <p><span id="value"></span></p>
+    </div>
 <table>
    <tr>
      <td><div id="icicle"></div></td>
@@ -22,17 +30,13 @@
 
   <!-- Create a list using <ul> and <li> tag -->   
     <h4>Files Submitted:</h4>
-    <li>brainstructure.html</li>
-    <li>brainstructure.js</li>
-    <li>brainstructure.css</li>
-    <li>allen.json</li>
-    <li>human_brain.svg</li>
-    <li>structures.json</li>
+    <li>icicle.html</li>
+    <li>icicle.js</li>
+    <li>iciclestylesheet.css</li>
+    <li>readme.json</li>
 
     <h4> Sources: </h4>
-    <ol>
-        <li><a href="http://mbostock.github.io/d3/talk/20111018/partition.html">Zoomable Horizontal Icicle Diagram</a> by Mike Bostock
-        <li>Neuroanatomical Data and Illustrations From The <a href="http://www.brain-map.org/">Allen Brain Atlas</a></li>
-        <li>Page Template by the Illustrious <a href="https://users.soe.ucsc.edu/~lodha/">Dr. Suresh Lodha</a></li>
-    </ol>  
+    <ul>
+        <li>Zoomable Icicle Example: <a href="url">https://gist.github.com/mbostock/1005873</a></li>
+    </ul>  
 </body>
