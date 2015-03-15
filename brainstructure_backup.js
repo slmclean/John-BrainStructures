@@ -6,7 +6,7 @@ var SECTION_IMAGE_ID = 112364351;
 var _structures = {};
 
 var width = 800,
-    height = 1000,
+    height = 2000,
     vPadding = 200;
 
 var x = d3.scale.linear()
@@ -74,14 +74,14 @@ var get_firstchild = function (n) {
 
 // Load all of the lsices.
 var loadSlices = function(on_success) {
-  d3.json("slices_rep.json", function (filenames) {
+  d3.json("slices.json", function (filenames) {
     d3.select("#brain").append("svg").attr("id", "brain_svg").attr("width", "600")
         .attr("height", 900)
         .append("g").attr("transform","scale(0.010625)")
         .attr("id", "svg_container");
     var i, j;
     for (i = 0; i < filenames.length; i++) {
-      d3.xml("SVGsRep/" + filenames[i], "images/svg+xml", function (xml) {
+      d3.xml("svgslices/" + filenames[i], "images/svg+xml", function (xml) {
         var brain_svg = document.getElementById("svg_container");
         xml_elem = get_firstchild(get_firstchild(xml.documentElement));
         brain_svg.appendChild(xml_elem);
@@ -90,7 +90,7 @@ var loadSlices = function(on_success) {
       });
     }
   });
-  if ($("#278095704") != null) {
+  if ($("#278094964") != null) {
     on_success();
   }
 }
@@ -143,14 +143,15 @@ var main = function() {
           .on("click", clicked)
           .on("mouseover", function (d) {
             d3.selectAll(".slice_svg").attr("visibility", "hidden");
+            console.log("#" + d.path_parent);
             d3.select("#" + d.path)
               .attr("style", function (d) { svg_color = d3.select(this).attr("style"); console.log(svg_color); return "stroke:black;fill:red"; });
-            d3.select("#" + d.path_parent).attr("visibility", "visible")
-          })
-          .on("mouseout", function (d) {
+            d3.select("#" + d.path_parent).attr("visibility", "visible");
+          }.on("mouseover", function (d) {
             d3.select("#" + d.path)
-              .attr("style", function (d) { console.log(svg_color); return svg_color; });
+              .attr("style", function (d) { console.log(svg_color); return svg_color; })
           });
+
       svg.selectAll(".label")
           .data(nodes)
         .enter().append("text")
